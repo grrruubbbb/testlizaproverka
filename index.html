@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест для Сонечки ❤️</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 720px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    padding: 40px;
+    animation: fadeIn 0.6s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #888;
+    margin-bottom: 25px;
+    font-size: 15px;
+  }
+
+  .progress-wrap {
+    height: 8px;
+    background: #eef0ff;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 25px;
+  }
+
+  .question {
+    background: #f8f9ff;
+    border: 2px solid #eef0ff;
+    border-radius: 14px;
+    padding: 20px 25px;
+    margin-bottom: 18px;
+    transition: all 0.3s ease;
+  }
+
+  .question:hover {
+    border-color: #c7ccff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
+  }
+
+  .question p {
+    font-weight: 600;
+    font-size: 17px;
+    color: #2d2d44;
+    margin-bottom: 14px;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fff;
+    border: 1.5px solid #e3e6f0;
+    font-size: 15px;
+    color: #444;
+  }
+
+  label:hover {
+    border-color: #667eea;
+    background: #f0f2ff;
+  }
+
+  label input {
+    margin-right: 12px;
+    accent-color: #667eea;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  label.correct {
+    background: #e6f9ee;
+    border-color: #34c759;
+    color: #1e7e34;
+    font-weight: 600;
+  }
+
+  label.wrong {
+    background: #fdeaea;
+    border-color: #ff3b30;
+    color: #c0392b;
+    font-weight: 600;
+  }
+
+  label.correct::after { content: "✓"; margin-left: auto; color: #34c759; font-weight: bold; }
+  label.wrong::after   { content: "✗"; margin-left: auto; color: #ff3b30; font-weight: bold; }
+
+  /* Основная кнопка проверки */
+  .main-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .main-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+  }
+
+  .main-btn:active { transform: translateY(0); }
+
+  .main-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Стили для всплывающего окна */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal.show { display: flex; animation: fadeIn 0.3s ease; }
+
+  .modal-content {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-content h2 { margin-bottom: 15px; font-size: 24px; }
+  .modal-content p { font-size: 17px; line-height: 1.5; color: #555; margin-bottom: 20px; }
+  
+  .modal-content.success h2 { color: #1e7e34; }
+  .modal-content.fail h2 { color: #c0392b; }
+  
+  .modal-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  /* Кнопка закрыть/попробовать снова */
+  .modal-btn.retry { background: #ff3b30; }
+  .modal-btn.retry:hover { background: #e02f25; }
+  
+  .modal-btn.close { background: #34c759; }
+  .modal-btn.close:hover { background: #28a745; }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>📝 Тест для сонечки твистер❤️️❤️️❤️️</h1>
+  <p class="subtitle">Ответь на вопросы иначе тебе п№зда</p>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-text" id="progressText">Отвечено: 0 из 7</div>
+
+  <form id="quiz">
+
+    <div class="question" data-q="q1">
+      <p>1. Кто моя первая интрижка?</p>
+      <label><input type="radio" name="q1" value="a"> Тарас</label>
+      <label><input type="radio" name="q1" value="b"> Матвей</label>
+      <label><input type="radio" name="q1" value="c"> Тимур</label>
+    </div>
+
+    <div class="question" data-q="q2">
+      <p>2. С кем у меня был 4 поцелуй?</p>
+      <label><input type="radio" name="q2" value="a"> Денис</label>
+      <label><input type="radio" name="q2" value="b"> Павленко</label>
+      <label><input type="radio" name="q2" value="c"> Глеб</label>
+      <label><input type="radio" name="q2" value="d"> Вадим</label>
+    </div>
+
+    <div class="question" data-q="q3">
+      <p>3. Кого я ненавижу больше всех?</p>
+      <label><input type="radio" name="q3" value="a"> Денис</label>
+      <label><input type="radio" name="q3" value="b"> Вадим</label>
+      <label><input type="radio" name="q3" value="c"> Павленко</label>
+      <label><input type="radio" name="q3" value="d"> Глеб</label>
+      <label><input type="radio" name="q3" value="e"> Костя</label>
+    </div>
+
+    <div class="question" data-q="q4">
+      <p>4. Кого я больше всех любила?</p>
+      <label><input type="radio" name="q4" value="a"> Денис</label>
+      <label><input type="radio" name="q4" value="b"> Вадим</label>
+      <label><input type="radio" name="q4" value="c"> Тимур</label>
+      <label><input type="radio" name="q4" value="d"> Тарас</label>
+    </div>
+
+    <div class="question" data-q="q5">
+      <p>5. КТО больше всего писал мне по пьяне?</p>
+      <label><input type="radio" name="q5" value="a"> Вадим</label>
+      <label><input type="radio" name="q5" value="b"> Денис</label>
+    </div>
+
+    <div class="question" data-q="q6">
+      <p>6. Кто дарил мне игрушку?</p>
+      <label><input type="radio" name="q6" value="a"> Вадим</label>
+      <label><input type="radio" name="q6" value="b"> Денис</label>
+      <label><input type="radio" name="q6" value="c"> Глеб</label>
+      <label><input type="radio" name="q6" value="d"> Костя</label>
+      <label><input type="radio" name="q6" value="e"> Тарас</label>
+    </div>
+
+    <div class="question" data-q="q7">
+      <p>7. Из-за кого я больше всех плакала?</p>
+      <label><input type="radio" name="q7" value="a"> Вадим</label>
+      <label><input type="radio" name="q7" value="b"> Денис</label>
+      <label><input type="radio" name="q7" value="c"> Тимур</label>
+    </div>
+    
+    <button type="button" class="main-btn" id="checkBtn" onclick="checkQuiz()">Проверить ответы</button>
+  </form>
+</div>
+
+<!-- Всплывающее окно (Модалка) -->
+<div class="modal" id="resultModal">
+  <div class="modal-content" id="modalContent">
+    <h2 id="modalTitle"></h2>
+    <p id="modalText"></p>
+    <button class="modal-btn" id="modalBtn" onclick="modalAction()">Закрыть</button>
+  </div>
+</div>
+
+<script>
+// ✅ Правильные ответы (q1..q7)
+const answers = {
+  q1: "b",
+  q2: "c",
+  q3: "a",
+  q4: "b",
+  q5: "a",
+  q6: "a",
+  q7: "a"
+};
+
+const totalQuestions = Object.keys(answers).length;
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+
+document.querySelectorAll('input[type="radio"]').forEach(r => {
+  r.addEventListener("change", updateProgress);
+});
+
+function updateProgress() {
+  let answered = 0;
+  for (let q in answers) {
+    if (document.querySelector(`input[name="${q}"]:checked`)) answered++;
+  }
+  progressBar.style.width = (answered / totalQuestions * 100) + "%";
+  progressText.textContent = `Отвечено: ${answered} из ${totalQuestions}`;
+}
+
+function checkQuiz() {
+  let score = 0;
+
+  for (let q in answers) {
+    const questionDiv = document.querySelector(`.question[data-q="${q}"]`);
+    const labels = questionDiv.querySelectorAll("label");
+    const selected = questionDiv.querySelector(`input[name="${q}"]:checked`);
+
+    labels.forEach(label => {
+      const input = label.querySelector("input");
+      label.classList.remove("correct", "wrong");
+
+      if (input.value === answers[q]) {
+        label.classList.add("correct");
+      }
+      if (selected && input === selected && input.value !== answers[q]) {
+        label.classList.add("wrong");
+      }
+    });
+
+    if (selected && selected.value === answers[q]) score++;
+  }
+
+  // Настройка всплывающего окна
+  const modal = document.getElementById("resultModal");
+  const modalContent = document.getElementById("modalContent");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalText = document.getElementById("modalText");
+  const modalBtn = document.getElementById("modalBtn");
+
+  if (score === totalQuestions) {
+    // Если ВСЕ ответы правильные
+    modalContent.className = "modal-content success";
+    modalTitle.textContent = "🎉 Вау! Невероятно!";
+    modalText.innerHTML = "<b>Ты молодец, лучшая самая подруга на этом свете! Знаешь меня на все 100%!</b> ❤️❤️❤️";
+    
+    // Настройка кнопки "Закрыть" для правильного ответа
+    modalBtn.textContent = "Круто!";
+    modalBtn.className = "modal-btn close";
+    modalBtn.onclick = closeModal;
+  } else {
+    // Если есть ошибки
+    modalContent.className = "modal-content fail";
+    modalTitle.textContent = "😅 Блин, попробуй еще раз!";
+    modalText.innerHTML = `Ты ответила правильно на <b>${score} из ${totalQuestions}</b> вопросов.<br><br>Посмотри на зелёные ответы и попробуй пройти тест заново!`;
+    
+    // Настройка кнопки "Пройти заново" для ошибки
+    modalBtn.textContent = "Пройти заново";
+    modalBtn.className = "modal-btn retry";
+    modalBtn.onclick = resetQuiz;
+  }
+
+  modal.classList.add("show");
+}
+
+// Функция закрытия окна (для успешного прохождения)
+function closeModal() {
+  document.getElementById("resultModal").classList.remove("show");
+  document.getElementById("checkBtn").disabled = true;
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+}
+
+// Функция перезапуска теста (если были ошибки)
+function resetQuiz() {
+  // Закрываем окно
+  document.getElementById("resultModal").classList.remove("show");
+  
+  // Снимаем все выделения с ответов
+  document.querySelectorAll('.correct, .wrong').forEach(el => el.classList.remove('correct', 'wrong'));
+  
+  // Очищаем все выбранные радио-кнопки
+  document.querySelectorAll('input[type="radio"]').forEach(r => {
+    r.checked = false;
+    r.disabled = false;
+  });
+  
+  // Разблокируем кнопку проверки
+  document.getElementById("checkBtn").disabled = false;
+  
+  // Сбрасываем прогресс-бар
+  updateProgress();
+  
+  // Прокручиваем страницу вверх, чтобы было удобно проходить заново
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
